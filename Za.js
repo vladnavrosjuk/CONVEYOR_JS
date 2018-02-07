@@ -21,7 +21,8 @@ var firstElemArr = [];
 var secondElemArr = [];
 var timeInt;
 var obj= 0;
-
+var eror=0;
+var pos =0;
 var target = "(";
 var target2 = ")";
 
@@ -33,32 +34,56 @@ function readInput() {
 
     firstElemString = document.getElementById('FirstElem').value;
 
-    var pos = 0;
-    while (pos<firstElemString.length) {
-        var foundPos = firstElemString.indexOf(target, pos);
-        var foundPos2 = firstElemString.indexOf(target2, pos);
 
-        if (foundPos<foundPos2 && foundPos!=-1)
+    while(pos<firstElemString.length){
+        if(firstElemString.charAt(pos)=="(")
             count++;
-        if (foundPos>foundPos2 || foundPos==-1)
+        if(firstElemString.charAt(pos)==")")
             count--;
-
-         // нашли на этой позиции
-        if(foundPos<foundPos2&&foundPos!=-1)
-        pos=foundPos+1;
-        else
-            pos =foundPos2+1;// продолжить поиск со следующей
-        if (count == -1){
-            obj = -10;
+        if(count<0){
+            eror = 1;
             break;
 
         }
 
+        pos++;
     }
-    if (count!=0 || obj !=0)
-        alert("jopa");
-        else
-            alert("good");
+    if(count == 0 && eror == 0)
+        obj =1;
+    else {
+        alert("Ошибка в использовании скобок");
+        count = 0;
+        eror = 0;
+        pos = 0;
+        throw "stop";
+    };
+
+    var regexp = /[^\(,\),\~,A-Z,\|,\&,\-,\!]/;
+    if(firstElemString.search(regexp)!=-1)
+    {
+        alert("Использованы неподдерживаемые символы");
+        count = 0;
+        eror = 0;
+        pos = 0;
+        throw "stop";
+    }
+    var regexp2 = /\w{2,}|(\~|\-|\||\&|\!)(\~|\-|\||\&)|(!)(!)|(\()((\s*\w*)|(\s*(\~|\!|\||\&|\-)\s*))(\))|(\))\s*(\()|(\((\~|\||\&|\-)\w)|((\~|\!|\||\&|\-)\w\()|((\~|\||\&|\-)+\w+(\~|\!|\||\&|\-)+)|((^(\~|\||\&|\-))\()|(\)(\~|\!|\||\&|\-)$)|(\w\!)|(\)\!)|(^(\~|\-|\||\&))|(^\((\~|\-|\||\&))/
+    if(firstElemString.search(regexp2)!=-1)
+    {
+        alert("Ошибка логики");
+        count = 0;
+        eror = 0;
+        pos = 0;
+        throw "stop";
+    }
+    if (firstElemString.length==0)
+        alert("Введите формулу");
+    else {
+        count = 0;
+        eror = 0;
+        pos = 0;
+        alert("Ошибок не найдено");
+    }
 
     /*firstElemString = firstElemString;
      secondElemString = secondElemString.replace(/,+$/g, '')*/;
